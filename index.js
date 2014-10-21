@@ -16,6 +16,8 @@
 'use strict';
 
 var jwt = require('jsonwebtoken');
+require('jws-jwk').shim();
+var lookup = require('oada-lookup');
 
 function generate(key, issuer, audience, accessCode) {
     var sec = {
@@ -30,8 +32,27 @@ function generate(key, issuer, audience, accessCode) {
     return jwt.sign(sec, key, options);
 }
 
-function verify() {
-	/* Stuff here */
+function verify(cId, cSecret, code, aud, done) {
+    if(code.clientId !== cId) {
+        return done(null, false);
+    }
+
+    lookup.clientRegistration(cId, {timeout: 1000}, function(err, reg) {
+        if(err) { return done(err); }
+
+        jwt.verify(cSecret, reg.keys, {
+            audience: aud,
+            issuer: code.clientId,
+        },
+        function(err, secret) {
+            if(err) { return done(err); }
+            if(secret.ac != code.code) {
+                return done(null, false);
+            }
+
+            done(null, true);
+        });
+    });
 }
 
 module.exports.generate = generate;
