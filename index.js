@@ -40,7 +40,7 @@ function verify(cId, cSecret, code, aud, done) {
     lookup.clientRegistration(cId, {timeout: 1000}, function(err, reg) {
         if(err) { return done(err); }
 
-        jwt.verify(cSecret, reg.keys, {
+        jwt.verify(cSecret, reg, {
             audience: aud,
             issuer: code.clientId,
         },
