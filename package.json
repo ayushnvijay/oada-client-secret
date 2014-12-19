@@ -24,6 +24,6 @@
   "dependencies": {
     "jsonwebtoken": "^1.1.2",
     "jws-jwk": "^0.1.4",
-    "oada-lookup": "^0.2.1"
+    "oada-lookup": "^0.4.0"
   }
 }
