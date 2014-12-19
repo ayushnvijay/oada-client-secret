@@ -1,6 +1,6 @@
 {
   "name": "oada-client-secret",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "OADA Client Secret library",
   "main": "index.js",
   "scripts": {
