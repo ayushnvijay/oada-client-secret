@@ -23,7 +23,8 @@
   "homepage": "https://github.com/oada/oada-client-secret",
   "dependencies": {
     "jsonwebtoken": "^1.1.2",
-    "jws-jwk": "^0.1.4",
-    "oada-lookup": "^0.4.0"
+    "oada-lookup": "^0.4.0",
+    "jwks-utils": "~0.1.0",
+    "rsa-pem-from-mod-exp": "~0.8.4"
   }
 }

@@ -16,7 +16,8 @@
 'use strict';
 
 var jwt = require('jsonwebtoken');
-require('jws-jwk').shim();
+var jwks = require('jwks-utils');
+var pem = require('rsa-pem-from-mod-exp');
 var lookup = require('oada-lookup');
 
 function generate(key, issuer, audience, accessCode) {
@@ -40,7 +41,17 @@ function verify(cId, cSecret, code, aud, done) {
     lookup.clientRegistration(cId, {timeout: 1000}, function(err, reg) {
         if(err) { return done(err); }
 
-        jwt.verify(cSecret, reg, {
+        var jwk = jwks.jwkForSignature(cSecret, reg);
+
+        if(!jwk) {
+            return done('JWK for client secret in the client\'s registration');
+        }
+
+        if(jwk.kty !== "RSA") {
+            return done('Client secret\'s must be signed by an RSA JWK');
+        }
+
+        jwt.verify(cSecret, pem(jwk.n, jwk.e), {
             audience: aud,
             issuer: code.clientId,
         },
