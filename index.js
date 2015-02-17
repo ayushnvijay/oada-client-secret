@@ -21,6 +21,12 @@ var pem = require('rsa-pem-from-mod-exp');
 var lookup = require('oada-lookup');
 
 function generate(key, issuer, audience, accessCode) {
+    // Can only sign with PEM
+    if(key.kty !== 'PEM') {
+        // Not sure what to do here...
+        return undefined;
+    }
+
     var sec = {
         ac: accessCode,
     };
@@ -28,9 +34,12 @@ function generate(key, issuer, audience, accessCode) {
         algorithm: 'RS256',
         audience: audience,
         issuer: issuer,
+        headers: {
+            kid: key.kid,
+        },
     };
 
-    return jwt.sign(sec, key, options);
+    return jwt.sign(sec, key.pem, options);
 }
 
 function verify(cId, cSecret, code, aud, done) {
