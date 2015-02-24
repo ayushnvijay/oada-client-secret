@@ -39,7 +39,6 @@ describe("testing if generate(key) passes even after passing a public PEM",funct
 describe("testing function generate() as a whole",function(){
     var cSecret = secret.generate(key, issuer, audience, payload);
     var decode = jwt.decode(cSecret);
-    console.log(decode);
     it("should expect issuer",function(done){
         expect(decode.iss).to.deep.equal(issuer);
         done();
@@ -56,4 +55,5 @@ describe("testing function generate() as a whole",function(){
         expect(decode.iat).to.be.a('number');
         done();
     });
-})
+
+});
