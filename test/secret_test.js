@@ -11,6 +11,7 @@ var key2 = {kty:'PEM',pem:pem2,kid:kid};
 var payload = 'accessCode';
 var audience = 'Ayush';
 var issuer = 'OADA';
+var cSecret = secret.generate(key, issuer, audience, payload);
 var options = {
     algorithm: 'RS256',
     audience: audience,
@@ -37,7 +38,6 @@ describe("testing if generate(key) passes even after passing a public PEM",funct
     });
 });
 describe("testing function generate() as a whole",function(){
-    var cSecret = secret.generate(key, issuer, audience, payload);
     var decode = jwt.decode(cSecret);
     it("should expect issuer",function(done){
         expect(decode.iss).to.deep.equal(issuer);
