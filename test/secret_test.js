@@ -13,11 +13,14 @@ describe("testing if generate(key) returns undefined even after passing PEM ",fu
         done();
     });
 });
-describe("testing if generate(key) returns undefined even after passing PEM",function(){
-    it("should pass as key is PEM (using equal)",function(done){
-        //shall I handle an error that public key has been passed
-        expect(secret.generate(key2)).not.to.deep.equal(undefined);
-        //gives signFinal error when key is public.
+describe("testing if generate(key) passes even after passing a public PEM",function(){
+    it("should throw SignFinal Error",function(done){
+        try{
+        secret.generate(key2);
+        }
+    catch(e){
+        expect(e.toString()).equal('Error: SignFinal error');
+    };
         done();
     });
 });
