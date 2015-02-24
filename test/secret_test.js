@@ -12,6 +12,8 @@ var payload = 'accessCode';
 var audience = 'Ayush';
 var issuer = 'OADA';
 var cSecret = secret.generate(key, issuer, audience, payload);
+var cID_same = 'accessCode';
+var cID_diff = 'ID1254';
 var options = {
     algorithm: 'RS256',
     audience: audience,
@@ -56,4 +58,13 @@ describe("testing function generate() as a whole",function(){
         done();
     });
 
+});
+describe("testing verify",function(){
+    it("should expect client id and accessCode to be same and returns valid as false",function(done){
+        secret.verify(cID_same, cSecret, payload, audience, function(err,valid){
+            expect(err).to.equal(null);
+            expect(valid).to.equal(false);
+            done();
+        });
+    });
 });
