@@ -13,7 +13,8 @@ var audience = 'Ayush';
 var issuer = 'OADA';
 var cSecret = secret.generate(key, issuer, audience, payload);
 var cID_same = 'accessCode';
-var cID_diff = 'ID1254';
+var cID_diff = 'ID1254@oada.com';
+var cID_lookupErr = 'aasf';
 var options = {
     algorithm: 'RS256',
     audience: audience,
@@ -64,6 +65,13 @@ describe("testing verify",function(){
         secret.verify(cID_same, cSecret, payload, audience, function(err,valid){
             expect(err).to.equal(null);
             expect(valid).to.equal(false);
+            done();
+        });
+    });
+    it("should throw an error from lookup.js as invalid client id is passed",function(done){
+        secret.verify('secret@client@oada', cSecret, payload, audience, function(err,valid){
+            expect(err).to.equal('Invalid clientId');
+            //not passing, err is resulting to null 
             done();
         });
     });
