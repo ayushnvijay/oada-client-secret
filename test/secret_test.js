@@ -83,3 +83,10 @@ describe("testing verify",function(){
         });
     });
 });
+
+/*ToDo
+need to change PEM keys ie making your own instead of getting it from diff repos!
+need to get rid of all these global variables. Use editor config
+Error handling with signFinal thingy
+Istanbul is giving some vague errors like "describe() undefined", need to learn how to use it
+Testing of verify is under progress*/
