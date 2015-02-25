@@ -8,11 +8,11 @@ var pem2 = fs.readFileSync('../../oada-id-client-js/examples/server-client/pubke
 var kid = '1234';
 var key = {kty:'PEM',pem:pem, kid:kid};
 var key2 = {kty:'PEM',pem:pem2,kid:kid};
+var key3 = {kty:'asd'};
 var payload = 'accessCode';
 var audience = 'Ayush';
 var issuer = 'OADA';
 var cSecret = secret.generate(key, issuer, audience, payload);
-var cID_same = 'accessCode';
 var cID_diff = 'ID1254@oada.com';
 var cID_lookupErr = 'aasf';
 var options = {
@@ -23,19 +23,23 @@ var options = {
         kid: key.kid,
         }
     };
-describe("testing if generate(key) returns undefined even after passing PEM ",function(){
+describe("testing what generate(key) returns after passing PEM and something else",function(){
     it("should pass as key is PEM (using deep equal)",function(done){
         expect(secret.generate(key)).not.to.deep.equal(undefined);
         done();
     });
+    it("should return undefined as key is not of type PEM",function(done){
+        expect(secret.generate(key3)).to.deep.equal(undefined);
+        done();
+    })
 });
 describe("testing if generate(key) passes even after passing a public PEM",function(){
     it("should throw SignFinal Error",function(done){
-        try{
-        secret.generate(key2);
-        }
+        try{secret.generate(key2);}
     catch(e){
         expect(e.toString()).equal('Error: SignFinal error');
+        //should add error to index.js files, as passing public key will break the execution
+        //SignFinal error is predifined error in node.
     };
         done();
     });
@@ -58,11 +62,15 @@ describe("testing function generate() as a whole",function(){
         expect(decode.iat).to.be.a('number');
         done();
     });
+    it("should expect jwt string",function(done){
+        expect(typeof cSecret).to.deep.equal('string');
+        done();
+    })
 
 });
 describe("testing verify",function(){
     it("should expect client id and accessCode to be same and returns valid as false",function(done){
-        secret.verify(cSecret, cID_same, payload, audience, function(err,valid){
+        secret.verify(cSecret, 'same_client', 'same_client', audience, function(err,valid){
             expect(err.toString()).to.equal('Error: Invalid clientId');
             done();
         });
