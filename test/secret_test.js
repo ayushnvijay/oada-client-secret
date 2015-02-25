@@ -62,16 +62,15 @@ describe("testing function generate() as a whole",function(){
 });
 describe("testing verify",function(){
     it("should expect client id and accessCode to be same and returns valid as false",function(done){
-        secret.verify(cID_same, cSecret, payload, audience, function(err,valid){
-            expect(err).to.equal(null);
-            expect(valid).to.equal(false);
+        secret.verify(cSecret, cID_same, payload, audience, function(err,valid){
+            expect(err.toString()).to.equal('Error: Invalid clientId');
             done();
         });
     });
     it("should throw an error from lookup.js as invalid client id is passed",function(done){
-        secret.verify('secret@client@oada', cSecret, payload, audience, function(err,valid){
-            expect(err).to.equal('Invalid clientId');
-            //not passing, err is resulting to null 
+        var error = new Error('Invalid clientId');
+        secret.verify(cSecret,'secret@client@oada', payload, audience, function(err,valid){
+            expect(err).to.deep.equal(error);
             done();
         });
     });

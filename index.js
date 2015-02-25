@@ -42,12 +42,10 @@ function generate(key, issuer, audience, accessCode) {
     return jwt.sign(sec, key.pem, options);
 }
 
-function verify(cId, cSecret, code, aud, done) {
-    if(code.clientId !== cId) {
-        return done(null, false);
-    }
+function verify(cSecret, clientId, accessCode, aud, done) {
 
-    lookup.clientRegistration(cId, {timeout: 1000}, function(err, reg) {
+        lookup.clientRegistration(clientId, {timeout: 1000}, function(err, reg) {
+
         if(err) { return done(err); }
 
         var jwk = jwks.jwkForSignature(cSecret, reg);
@@ -62,11 +60,11 @@ function verify(cId, cSecret, code, aud, done) {
 
         jwt.verify(cSecret, pem(jwk.n, jwk.e), {
             audience: aud,
-            issuer: code.clientId,
+            issuer: clientId,
         },
         function(err, secret) {
             if(err) { return done(err); }
-            if(secret.ac != code.code) {
+            if(secret.ac != accessCode) { 
                 return done(null, false);
             }
 
